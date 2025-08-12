@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pub/Sub Demo</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>Pub/Sub Demo</h1>
+
+  <!-- Subscriber -->
+  <div>
+    <h2>Subscribe to a Topic</h2>
+    <input id="subTopic" placeholder="Enter topic name" />
+    <button onclick="subscribe()">Subscribe</button>
+  </div>
+
+  <!-- Publisher -->
+  <div>
+    <h2>Publish a Message</h2>
+    <input id="pubTopic" placeholder="Enter topic name" />
+    <input id="pubMessage" placeholder="Enter message" />
+    <button onclick="publish()">Publish</button>
+  </div>
+
+  <hr>
+  <h2>Received Messages</h2>
+  <div id="messages"></div>
+
+  <script>
+    const socket = io("http://localhost:3000");
+
+    function subscribe() {
+      const topic = document.getElementById("subTopic").value;
+      socket.emit("subscribe", topic);
+      log(`✅ Subscribed to: ${topic}`);
+    }
+
+    function publish() {
+      const topic = document.getElementById("pubTopic").value;
+      const message = document.getElementById("pubMessage").value;
+      socket.emit("publish", { topic, message });
+      log(`📤 Published to ${topic}: ${message}`);
+    }
+
+    socket.on("message", ({ topic, message }) => {
+      log(`📩 [${topic}] ${message}`);
+    });
+
+    function log(text) {
+      document.getElementById("messages").innerHTML += `<p>${text}</p>`;
+    }
+  </script>
+</body>
+</html>

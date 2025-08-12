@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "module": "server.js",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "^5.1.0",
+    "nodemailer": "7.0.5",
+    "socket.io": "^4.8.1"
+  }
+}
