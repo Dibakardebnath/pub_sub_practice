@@ -127,7 +127,7 @@ export default function Contact() {
 
     return (
         <div className="min-h-screen max-w-screen border bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 text-black">
-            <div className="w-full mx-auto max-w-4xl">
+            <div className="w-full mx-auto">
                 {/* Header */}
                 <div className="text-center mb-10">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
