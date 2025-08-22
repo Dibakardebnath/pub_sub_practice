@@ -1,17 +1,27 @@
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-const cors = require("cors");
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import cors from "cors";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+import connectDB from "./database/db.js";
+import crypto from "crypto";
+import Razorpay from "razorpay";
+
+dotenv.config();
+
+await connectDB();
 
 const app = express();
-
-// Allow CORS for all origins (for dev)
 app.use(cors());
 app.use(express.json());
 
 const server = http.createServer(app);
+
+const razorpayInstance = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 // ✅ CORS config for socket.io
 const io = new Server(server, {
@@ -55,7 +65,7 @@ app.post("/send-email", async (req, res) => {
 
   const mailOptions = {
     from: email,
-    to: "ddibakar190@gmail.com", 
+    to: "ddibakar190@gmail.com",
     subject: `Contact Form Submission from ${name}`,
     text: message,
   };
@@ -68,6 +78,31 @@ app.post("/send-email", async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-server.listen(process.env.PORT || 3000, () => {
+
+app.post("/api/payment/order", async (req, res) => {
+  const { amount } = req.body;
+
+   try {
+     const options = {
+       amount: Number(amount * 100),
+       currency: "INR",
+       receipt: crypto.randomBytes(10).toString("hex"),
+     };
+
+     razorpayInstance.orders.create(options, (error, order) => {
+       if (error) {
+         console.log(error);
+         return res.status(500).json({ message: "Something Went Wrong!" });
+       }
+       res.status(200).json({ data: order });
+       console.log(order);
+     });
+   } catch (error) {
+     res.status(500).json({ message: "Internal Server Error!" });
+     console.log(error);
+   }
+})
+
+server.listen(process.env.PORT || 3001, () => {
   console.log("🚀 Server running on http://localhost:3000");
 });

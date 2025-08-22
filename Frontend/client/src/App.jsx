@@ -4,8 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { Link, Route, Router, Routes } from 'react-router-dom'
 import Home from './Component/Home'
-import About from './Component/About'
 import Contact from './Component/Contact'
+import Payment from './Component/Payment'
 
 function App() {
 
@@ -17,7 +17,7 @@ function App() {
             <Link to="/" className="hover:text-blue-300">Home</Link>
           </li>
           <li>
-            <Link to="/about" className="hover:text-blue-300">About</Link>
+            <Link to="/payment" className="hover:text-blue-300">Payment</Link>
           </li>
           <li>
             <Link to="/contact" className="hover:text-blue-300">Contact</Link>
@@ -26,7 +26,7 @@ function App() {
       </nav>
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/payment" element={<Payment />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
 
